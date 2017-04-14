@@ -76,9 +76,6 @@ class Player {
                 }
             }
             for (int i = 0; i < myShipCount; i++) {
-                if(barrels[0] == null)
-                    System.out.println("barrels is null");
-                int b = barrels[0].x;
                 System.out.println("MOVE " + barrels[0].x + " " + barrels[0].y);
             }
         }
