@@ -13,6 +13,8 @@ class Ship {
     int owner;
     int x;
     int y;
+    int mine_cooldown = 0;
+    int canon_cooldown = 0;
     
     public Ship(int arg1, int arg2, int arg3, int arg4, int x1, int y1) {
         rotation = arg1;
@@ -21,6 +23,19 @@ class Ship {
         owner = arg4;
         x = x1;
         y = y1;
+    }
+    
+    public void update_cooldowns(){
+        mine_cooldown --;
+        canon_cooldown --;
+    }
+    
+    public void updateMineCooldown(){
+        mine_cooldown = 4;
+    }
+    
+    public void updateCanonCooldown(){
+        canon_cooldown = 1;
     }
 
 }
@@ -40,6 +55,16 @@ class Move {
     Ship ship;
     int dest_x;
     int dest_y;
+}
+
+class Mine {
+    int x;
+    int y;
+}
+
+class CannonBall {
+    int x;
+    int y;
 }
 
  
