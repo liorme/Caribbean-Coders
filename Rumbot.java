@@ -82,7 +82,30 @@ class Ship extends Entity {
         }
         return best;
     }
-
+    
+    /*
+    * calculate where the ship will be on the next turn assuming constant speed
+    */
+    public void doTurn(){
+        if (this.rotation == 4 || this.rotation == 5){
+                this.y++;
+        }else if (this.rotation == 1 || this.rotation == 2){
+                this.y--;
+        }
+        if (this.y % 2 == 0){
+            if (this.rotation == 0){
+                this.x++;
+            }else if(this.rotation == 2 || this.rotation == 3 || this.rotation == 4){
+                this.x--;
+            }
+        }else{
+            if (this.rotation == 0 || this.rotation == 1 || this.rotation == 5){
+                this.x++;
+            }else if (this.rotation == 3){
+                this.x--;
+            }
+        }
+    }
 }
 
 
