@@ -12,11 +12,23 @@ class Entity {
         x = x1;
         y = y1;
     }
-    
-    public int distance(Entity other){
+
+    public int euc_dist(Entity other){
         int dx = x - other.x;
         int dy = y - other.y;
         return (int) Math.sqrt(dx^2+dy^2);
+    }
+    
+    public int hex_dist(Entity other){
+        int dx = Math.abs(x - other.x);
+        int dy = Math.abs(y - other.y);
+        return (int) Math.max(dx+dy/2,dy);
+    }
+    
+    public int weird_dist(Entity other){
+        int dx = Math.abs(x - other.x);
+        int dy = Math.abs(y - other.y);
+        return (int) (dx+dy)/2;
     }
 
     public Entity closest(Entity[] e){
