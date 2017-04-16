@@ -1,7 +1,29 @@
 import java.util.*;
 import java.io.*;
 import java.math.*;
+import java.util.*;
 
+class MoveChains {
+    String[] commands = new String[30];
+    /*x,y,rotation,speed refer to parameters of ship after all moves in chain*/
+    int x;
+    int y;
+    int rotation;
+    int speed;
+    private int idx=0;
+
+    public MoveChains(MoveChains prev, String new_command, int x1, int y1, int rotation1, int speed1) {
+        for(int i=0; i<idx;i++) {
+            commands[i]=prev.commands[i];
+        }
+        x=x1;
+        y=y1;
+        rotation=rotation1;
+        speed=speed1;
+        commands[idx]= new_command;
+        idx ++;
+    }
+}
 
 class Entity {
     int x;
@@ -32,7 +54,7 @@ class Entity {
     }
 
     public Entity closest(Entity[] e){
-        int min_dist = 9999999;
+        int min_dist = 99999;
         Entity best = null;
         for (int i = 0 ; i < e.length ; i++){
             Entity ent = e[i];
@@ -79,7 +101,7 @@ class Ship extends Entity {
     }
 
     public Barrel bestBarrel(Barrel[] b){
-        int min_dist = 9999999;
+        int min_dist = 9999;
         Barrel best = null;
         for (int i = 0 ; i < b.length ; i++){
             Barrel barrel = b[i];
@@ -93,6 +115,25 @@ class Ship extends Entity {
             }
         }
         return best;
+    }
+
+
+    public void set_sail(Mine[] mines, CannonBall[] cannons, Entity dest) {
+        ArrayList paths = new ArrayList();
+        paths.add(new MoveChains(null, "FIRST", this.x, this.y, this.rotation, this.speed));
+        int max_len = 99999;
+
+        while(true) {
+            MoveChain cur = (MoveChain) paths.get(0);
+            if(cur.speed == 2){ /* WAIT case */
+                doTurn();
+            }
+
+
+        }   
+
+
+
     }
     
     /*
@@ -132,11 +173,12 @@ class Barrel extends Entity{
 class Move {
     Ship ship;
     Entity dest;
-    int dist; 
+    int dist;
     public Move(Ship s, Entity e, int d){
         ship = s;
         dest = e;
         dist = d;
+
     }
 }
 
@@ -171,6 +213,31 @@ class Player {
     final static int MINE_COOLDOWN = 4;
     final static int CANON_COOLDOWN = 1;
     
+    public static int[] doTurn(int x, int y, int rotation, int speed) {
+        for(int i=0;i<speed;i++) {
+            if (rotation == 4 || rotation == 5){
+                    y++;
+            }else if (rotation == 1 || rotation == 2){
+                    y--;
+            }
+            if (y % 2 == 0){
+                if (rotation == 0){
+                    x++;
+                }else if(rotation == 2 || rotation == 3 || rotation == 4){
+                    x--;
+                }
+            }else{
+                if (rotation == 0 || rotation == 1 || rotation == 5){
+                    x++;
+                }else if (rotation == 3){
+                    x--;
+                }
+            }  
+        } 
+        int[] arr={x,y};
+        return arr;
+    }
+
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
         int[] mine_cooldowns = {0, 0, 0};
