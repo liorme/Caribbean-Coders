@@ -1,4 +1,4 @@
-#imports
+# imports
 import sys
 import math
 
@@ -14,6 +14,15 @@ DAMAGE_SIDES = 25
 MINE_DMG = 25
 MINE_ADJ_DMG = 10
 
+class Location:
+	def __init__ (self, x, y):
+		self.x = x
+		self.y = y
+
+	def hex_dist(other):
+		dx = math.abs(self.x-other.x)
+		dy = math.abs(self.y-other.y)
+		return max(dx+dy/2, dy)
 
 class Ship:
 	def __init__(self, id, arg1, arg2, arg3, arg4, x, y, mc=0, cbc=0):
@@ -22,8 +31,7 @@ class Ship:
 		self.speed = arg2
 		self.rum = arg3
 		self.owner = arg4
-		self.x = x
-		self.y = y
+		self.loc = Location(x,y)
 		self.mc = mc
 		self.cbc = cbc
 	def can_fire():
@@ -45,32 +53,58 @@ class Barrel:
 	def __init__(self, id, arg1, x, y):
 		self.id = id
 		self.rum_count = arg1
-		self.x = x
-		self.y = y
+		self.loc = Location(x,y)
 
 class Mine:
 	def __init__(self, id, x, y):
 		self.id = id
-		self.x = x
-		self.y = y
+		self.loc = Location(x,y)
 
 class CanonBall:
 	def __init__(self, id, arg1, arg2, x, y):
 		self.id = id
 		self.shipid = arg1
 		self.turns = arg2
-		self.x = x
-		self.y = y
+		self.loc = Location(x,y)
+
+class Action:
+	def __init__(self, type, loc=Location(-1, -1)):
+		self.type = type
+		self.loc = loc
+
+class Plan:
+	def __init__(self, ship, dest, plan):
+		self.ship = ship
+		self.dest = dest
+		self.plan = plan # list of Actions
+		self.step = 0
+		
+	def next_move(self):
+		next = self.plan[self.step]
+		self.step += 1
+		return next
 
 #global varaibles
 
+plans = []
+
 #functions
 
-def hex_dist(a, b):
-	dx = math.abs(a.x-b.x)
-	dy = math.abs(a.y-b.y)
-	return max(dx+dy/2, dy)
+def find_plan(ship):
+	for plan in plans:
+		if plan.ship == ship:
+			return plan
+	return None
 
+def do_plan(plan):
+	next = plan.next_move()
+	if next.type == "MOVE" or next.type == "FIRE":
+		print "%s %d %d\n", next.type, next.loc.x, next.loc.y
+	else:
+		print next.type
+
+def make_plan(ship):
+	return Plan(ship, Location(0,0), [Action("MINE")])
 
 # game loop
 while True:
@@ -86,10 +120,10 @@ while True:
         entity_id = int(entity_id)
         x = int(x)
         y = int(y)
-        arg_1 = int(arg_1)
-        arg_2 = int(arg_2)
-        arg_3 = int(arg_3)
-        arg_4 = int(arg_4)
+        arg1 = int(arg_1)
+        arg2 = int(arg_2)
+        arg3 = int(arg_3)
+        arg4 = int(arg_4)
         if entity_type == "SHIP":
         	if arg4 == ME:
         		my_ships.append(Ship(entity_id, arg1, arg2, arg3, arg4, x, y))
@@ -102,12 +136,15 @@ while True:
         elif entity_type == "CANNONBALL":
         	cannonballs.append(CanonBall(entity_id, arg1, arg2, x, y))
 
-    for i in xrange(my_ship_count):
+    for ship in my_ships:
+    	plan = find_plan(ship)
+    	if plan is not None:
+    		do_plan(plan)
+    	else:
+	    	plan = make_plan(ship)
+	    	plans.append(plan)
+	    	do_plan(plan)
 
-        # Write an action using print
-        # To debug: print >> sys.stderr, "Debug messages..."
 
-        # Any valid action, such as "WAIT" or "MOVE x y"
-        print "MOVE 11 10"
 
 
