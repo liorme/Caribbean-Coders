@@ -186,7 +186,7 @@ class Player {
             }
             int myShipCount = in.nextInt(); // the number of remaining ships
             Ship[] my_ships = new Ship[myShipCount];
-            Ship[] enemy_ships = new Ship[myShipCount];
+            Ship[] enemy_ships = new Ship[entityCount];
             int entityCount = in.nextInt(); // the number of entities (e.g. ships, mines or cannonballs)
             Barrel[] barrels = new Barrel[entityCount];
             Mine[] mines = new Mine[entityCount];
