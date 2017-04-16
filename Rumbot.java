@@ -39,7 +39,7 @@ class Entity {
             if (ent == null){
                 continue;
             }
-            int dist = this.distance(ent);
+            int dist = this.hex_dist(ent);
             if (dist < min_dist){
                 min_dist = dist;
                 best = ent;
@@ -86,7 +86,7 @@ class Ship extends Entity {
             if (barrel == null){
                 continue;
             }
-            int dist = this.distance(barrel)/barrel.rum_count;
+            int dist = this.hex_dist(barrel)/barrel.rum_count;
             if (dist < min_dist){
                 min_dist = dist;
                 best = barrel;
@@ -239,14 +239,9 @@ class Player {
                     Ship[] in_range = new Ship[myShipCount];
                     int idx = 0;
                     for (int j = 0 ; j < myShipCount ; j++)
-                        if (enemy_ships[j].distance(ship) < ship.attack_range)
+                        if (enemy_ships[j] != null && enemy_ships[j].hex_dist(ship) < ship.attack_range){
                             in_range[idx++] = enemy_ships[j]; 
-                    if (in_range.length > 0) {
-                        Entity closest = ship.closest(in_range);
-                        System.out.println("FIRE " + closest.x + " " + closest.y);
-                        bombed = true;
-                        cb_cooldowns[i] = CANON_COOLDOWN + 1;
-                    }
+                        }
                 }
                 else if (!bombed){
                     Barrel best = ship.bestBarrel(barrels);
