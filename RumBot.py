@@ -63,12 +63,13 @@ class CanonBall:
 		self.y = y
 
 class PlanState:
-    def __init__(self,x,y,z,r,s,command):#(x,y,z) int-rotation int-speed str-FirstCommand 
+    def __init__(self,x,y,z,r,s,command):#(x,y,z) int-rotation int-speed int-distance str-FirstCommand 
         self.x = x
         self.y = y
         self.z = z
         self.r = r
         self.s = s
+        self.d = d
         self.command = command
 
 class CubePoint:
@@ -96,12 +97,52 @@ def hex_cube_dist(a, b):
     return (dx+dy+dz)/2
 
 def to_cube_cords(object): #returns cube cords in topple
-     x = object.x
-     y = object.y
-     xp = x - (y - (y & 1)) / 2
-     zp = y
-     yp = -(xp + zp)
-     return CubePoint(xp,yp,zp)
+    x = object.x
+    y = object.y
+    xp = x - (y - (y & 1)) / 2
+    zp = y
+    yp = -(xp + zp)
+    return CubePoint(xp,yp,zp)
+
+def do_plan_turn(plan):
+    if plan.r == 0:
+        plan.x = plan.x +1
+        plan.y = plan.y -1
+        plan.z = plan.z
+    elif plan.r == 1:
+        plan.x = plan.x +1
+        plan.y = plan.y
+        plan.z = plan.z -1
+    elif plan.r == 2:
+        plan.x = plan.x 
+        plan.y = plan.y +1
+        plan.z = plan.z -1
+    elif plan.r == 3:
+        plan.x = plan.x -1
+        plan.y = plan.y +1
+        plan.z = plan.z 
+    elif plan.r == 4:
+        plan.x = plan.x -1
+        plan.y = plan.y
+        plan.z = plan.z +1
+    elif plan.r == 5:
+        plan.x = plan.x 
+        plan.y = plan.y -1        
+        plan.z = plan.z +1
+    return plan
+
+def move(ship,dest):
+    this_turn = []
+    next_turn = []
+    first_cords = to_cube_cords(ship)
+    cube_dest = to_cube_cords(dest)
+    
+    empty_plan = PlanState(first_cords.x,first_cords.y,first_cords.z,ship.rotation,ship.speed,"")
+    for i in xrange(ship.speed):
+        empty_plan = do_plan_turn(empty_plan)
+    
+    port = PlanState(first_cords.x,first_cords.y,first_cords.z,ship.rotation,(ship.rotation+1)%6,ship.speed,"PORT")
+    
 
 # game loop
 while True:
@@ -136,8 +177,9 @@ while True:
     for i in xrange(my_ship_count):
 
         # Write an action using print
-
-        #print >> sys.stderr, 
+        a,b,c = to_cube_cords(Barrel(0,0,0,0)),to_cube_cords(Barrel(0,0,1,0)),to_cube_cords(Barrel(0,0,0,1))
+        
+        print >> sys.stderr, (a.x,a.y,a.z), (b.x,b.y,b.z), (c.x,c.y,c.z)
 
         # Any valid action, such as "WAIT" or "MOVE x y"
         print "MOVE 11 10"
