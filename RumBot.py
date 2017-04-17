@@ -71,15 +71,37 @@ class PlanState:
         self.s = s
         self.command = command
 
+class CubePoint:
+    def __init__(self,x,y,z):
+        self.x = x
+        self.y = y
+        self.z = z
+
 #global varaibles
 
 #functions
 
 def hex_dist(a, b):
-	dx = math.abs(a.x-b.x)
-	dy = math.abs(a.y-b.y)
-	return max(dx+dy/2, dy)
+	a = to_cube_cords(a)
+	b = to_cube_cords(b)
+	dx = abs(a.x-b.x)
+	dy = abs(a.y-b.y)
+	dz = abs(a.z-b.z)
+	return (dx+dy+dz)/2
 
+def hex_cube_dist(a, b):
+    dx = abs(a.x-b.x)
+    dy = abs(a.y-b.y)
+    dz = abs(a.z-b.z)
+    return (dx+dy+dz)/2
+
+def to_cube_cords(object): #returns cube cords in topple
+     x = object.x
+     y = object.y
+     xp = x - (y - (y & 1)) / 2
+     zp = y
+     yp = -(xp + zp)
+     return CubePoint(xp,yp,zp)
 
 # game loop
 while True:
@@ -114,7 +136,8 @@ while True:
     for i in xrange(my_ship_count):
 
         # Write an action using print
-        # To debug: print >> sys.stderr, "Debug messages..."
+
+        #print >> sys.stderr, 
 
         # Any valid action, such as "WAIT" or "MOVE x y"
         print "MOVE 11 10"
