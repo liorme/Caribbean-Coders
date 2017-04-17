@@ -62,7 +62,7 @@ class CanonBall:
 		self.x = x
 		self.y = y
 
-class PlaneState:
+class PlanState:
     def __init__(self,x,y,z,r,s,command):#(x,y,z) int-rotation int-speed str-FirstCommand 
         self.x = x
         self.y = y
