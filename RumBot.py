@@ -16,12 +16,12 @@ MINE_ADJ_DMG = 10
 
 
 class Ship:
-	def __init__(self, id, arg1, arg2, arg3, arg4, x, y, mc=0, cbc=0):
+	def __init__(self, id, arg_1, arg_2, arg_3, arg_4, x, y, mc=0, cbc=0):
 		self.id = id
-		self.rotation = arg1
-		self.speed = arg2
-		self.rum = arg3
-		self.owner = arg4
+		self.rotation = arg_1
+		self.speed = arg_2
+		self.rum = arg_3
+		self.owner = arg_4
 		self.x = x
 		self.y = y
 		self.mc = mc
@@ -42,9 +42,9 @@ class Ship:
 		return best
 
 class Barrel:
-	def __init__(self, id, arg1, x, y):
+	def __init__(self, id, arg_1, x, y):
 		self.id = id
-		self.rum_count = arg1
+		self.rum_count = arg_1
 		self.x = x
 		self.y = y
 
@@ -55,12 +55,21 @@ class Mine:
 		self.y = y
 
 class CanonBall:
-	def __init__(self, id, arg1, arg2, x, y):
+	def __init__(self, id, arg_1, arg_2, x, y):
 		self.id = id
-		self.shipid = arg1
-		self.turns = arg2
+		self.shipid = arg_1
+		self.turns = arg_2
 		self.x = x
 		self.y = y
+
+class PlaneState:
+    def __init__(self,x,y,z,r,s,command):#(x,y,z) int-rotation int-speed str-FirstCommand 
+        self.x = x
+        self.y = y
+        self.z = z
+        self.r = r
+        self.s = s
+        self.command = command
 
 #global varaibles
 
@@ -91,16 +100,16 @@ while True:
         arg_3 = int(arg_3)
         arg_4 = int(arg_4)
         if entity_type == "SHIP":
-        	if arg4 == ME:
-        		my_ships.append(Ship(entity_id, arg1, arg2, arg3, arg4, x, y))
+        	if arg_4 == ME:
+        		my_ships.append(Ship(entity_id, arg_1, arg_2, arg_3, arg_4, x, y))
         	else:
-        		enemy_ships.append(Ship(entity_id, arg1, arg2, arg3, arg4, x, y))
+        		enemy_ships.append(Ship(entity_id, arg_1, arg_2, arg_3, arg_4, x, y))
         elif entity_type == "BARREL":
-        	barrels.append(Barrel(entity_id, arg1, x, y))
+        	barrels.append(Barrel(entity_id, arg_1, x, y))
         elif entity_type == "MINE":
         	mines.append(Mine(entity_id, x, y))
         elif entity_type == "CANNONBALL":
-        	cannonballs.append(CanonBall(entity_id, arg1, arg2, x, y))
+        	cannonballs.append(CanonBall(entity_id, arg_1, arg_2, x, y))
 
     for i in xrange(my_ship_count):
 
@@ -109,5 +118,3 @@ while True:
 
         # Any valid action, such as "WAIT" or "MOVE x y"
         print "MOVE 11 10"
-
-
